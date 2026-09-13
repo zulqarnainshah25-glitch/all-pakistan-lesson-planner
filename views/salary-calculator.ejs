@@ -1,0 +1,1022 @@
+<%- include('partials/header') %>
+
+<style>
+    /* Form Controls Text Visibility Fix (Inputs, Selects, and Placeholders) */
+  input.form-control, 
+  select.form-control, 
+  select.form-control option {
+      color: #1a202c !important; /* Dark text (Black/Dark Gray) */
+      background-color: #ffffff !important; /* White background */
+  }
+  
+  input.form-control::placeholder {
+      color: #64748b !important; /* Dark gray placeholder (taake hints saaf nazar aayein) */
+  }
+  /* Dropdown (Select Box) Text Visibility Fix */
+  select.form-control,
+  select.form-control option {
+    color: #1a202c !important; /* Dark gray/black text */
+    background-color: #ffffff !important; /* White background */
+  }
+  /* Salary Calculator Dynamic Text Color Fix */
+  .post-body,
+  .post-body div,
+  .post-body span,
+  .post-body p,
+  .post-body label,
+  .post-body td,
+  .post-body th,
+  .post-body li {
+    color: var(--text-main) !important;
+  }
+  .post-body small,
+  .post-body [style*="color"] {
+    color: var(--text-main) !important;
+  }
+  .post-body h1,
+  .post-body h2,
+  .post-body h3,
+  .post-body h4,
+  .post-body h5,
+  .post-body h6 {
+    color: var(--primary) !important;
+  }
+
+  :root {
+    --primary: #0f5e30;
+    --primary-light: #1a8a48;
+    --card-bg: #ffffff;
+    --text-dark: #2c3e50;
+    --text-muted: #6c757d;
+    --border-color: #e0e0e0;
+    --error: #dc3545;
+  }
+
+  .calc-container {
+    max-width: 650px;
+    margin: 40px auto;
+    background: var(--card-bg);
+    border-radius: 12px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+    overflow: hidden;
+    animation: fadeIn 0.4s ease-out;
+  }
+  .calc-header {
+    background: linear-gradient(135deg, var(--primary), var(--primary-light));
+    color: white;
+    padding: 20px;
+    text-align: center;
+  }
+  .calc-header h2 {
+    font-size: 22px;
+    font-weight: 600;
+    margin-bottom: 4px;
+    color: white !important;
+  }
+  .calc-header p {
+    font-size: 13px;
+    opacity: 0.9;
+  }
+  .content {
+    padding: 20px;
+  }
+  .form-group {
+    margin-bottom: 16px;
+  }
+  .form-group label {
+    display: block;
+    margin-bottom: 6px;
+    font-weight: 600;
+    color: var(--text-dark);
+    font-size: 13px;
+  }
+  .form-control {
+    width: 100%;
+    padding: 10px 14px;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    font-size: 15px;
+    background-color: #fafafa;
+  }
+  .form-control:focus {
+    outline: none;
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(26, 138, 72, 0.1);
+    background-color: #fff;
+  }
+  .form-control:disabled {
+    background-color: #e9ecef;
+    cursor: not-allowed;
+  }
+  .btn-container {
+    display: flex;
+    gap: 10px;
+    margin-top: 24px;
+  }
+  .btn-calc {
+    flex: 1;
+    padding: 12px;
+    border: none;
+    border-radius: 8px;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    text-align: center;
+  }
+  .btn-primary {
+    background-color: var(--primary);
+    color: white;
+  }
+  .btn-secondary {
+    background-color: #f1f1f1;
+    color: var(--text-dark);
+  }
+  #error-msg {
+    display: none;
+    color: var(--error);
+    font-size: 13px;
+    margin-bottom: 15px;
+    padding: 10px;
+    background-color: #f8d7da;
+    border-radius: 6px;
+    text-align: center;
+  }
+  .results {
+    display: none;
+    margin-top: 24px;
+    border-top: 2px dashed var(--border-color);
+    padding-top: 20px;
+    animation: slideDown 0.3s ease-out;
+  }
+  .section-title {
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--primary);
+    margin: 16px 0 8px 0;
+    padding-bottom: 4px;
+    border-bottom: 1px solid var(--border-color);
+    text-transform: uppercase;
+  }
+  .result-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 12px;
+    font-size: 14px;
+  }
+  .result-table td {
+    padding: 8px 4px;
+    border-bottom: 1px solid #f0f0f0;
+  }
+  .result-label {
+    color: var(--text-dark);
+    font-weight: 500;
+  }
+  .result-value {
+    font-weight: 600;
+    text-align: right;
+    color: var(--text-dark);
+  }
+  .result-subtext {
+    font-size: 11px;
+    color: var(--text-muted);
+    display: block;
+  }
+  .summary-card {
+    padding: 12px 16px;
+    border-radius: 8px;
+    margin-top: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-weight: bold;
+    font-size: 15px;
+  }
+  .card-blue {
+    background-color: #e8f4fd;
+    border: 1px solid #b8daff;
+    color: #004085;
+  }
+  .card-red {
+    background-color: #f8d7da;
+    border: 1px solid #f5c6cb;
+    color: #721c24;
+  }
+  .card-dark-green {
+    background-color: #d1e7dd;
+    border: 1px solid #badbcc;
+    color: #0f5132;
+  }
+  .card-vibrant-green {
+    background-color: #28a745;
+    color: #ffffff;
+    border: none;
+    box-shadow: 0 4px 12px rgba(40, 167, 69, 0.3);
+    margin-top: 16px;
+    padding: 16px;
+    border-radius: 10px;
+  }
+  .info-section {
+    margin-top: 30px;
+    padding: 20px 0;
+    border-top: 1px solid var(--border-color);
+  }
+  .info-section h3 {
+    color: var(--primary);
+    font-size: 18px;
+    margin-bottom: 12px;
+  }
+  .info-section p,
+  .info-section li {
+    color: var(--text-dark);
+    font-size: 14px;
+    margin-bottom: 8px;
+  }
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+  @keyframes slideDown {
+    from {
+      opacity: 0;
+      transform: translateY(-8px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+</style>
+
+<div class="container mx-auto px-6 py-8 flex-grow">
+  <div class="calc-container">
+    <div class="calc-header">
+      <h2>Government of Sindh</h2>
+      <p>
+        Salary &amp; Sindh Government Salary Calculator 2026 by Sayed Zulqarnain
+        Shah
+      </p>
+    </div>
+
+    <div class="content">
+      <p
+        style="
+          color: var(--text-dark);
+          font-size: 14px;
+          line-height: 1.6;
+          margin-bottom: 20px;
+          text-align: left;
+        "
+      >
+        Welcome to the official
+        <strong>sindh government salary calculator 2026</strong> on ALLFORU.
+        Whether you are looking for an accurate
+        <strong>bps 14 salary calculator sindh</strong> to check your
+        post-budget allowances, or you simply want to estimate your
+        <strong>sindh school teacher salary slip online</strong>, this tool is
+        designed for you. Created specifically to assist our teaching community
+        across all districts, from Ghotki to Karachi, it provides exact
+        calculations for BPS-01 to BPS-22 employees instantly.
+      </p>
+
+      <div id="error-msg"></div>
+
+      <form id="calculator-form">
+        <div class="form-group">
+          <label for="emp-name">Employee Name (Optional)</label>
+          <input
+            class="form-control"
+            id="emp-name"
+            placeholder="Enter Employee Name"
+            type="text"
+          />
+        </div>
+
+        <div class="form-group">
+          <label for="bps">Basic Pay Scale (BPS) *</label>
+          <select class="form-control" id="bps" required="">
+            <option disabled="" selected="" value="">
+              Select BPS (01 - 22)
+            </option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="stage">Pay Stage / Increments *</label>
+          <select class="form-control" disabled="" id="stage" required="">
+            <option disabled="" selected="" value="">
+              First select BPS above
+            </option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="basic-pay"
+            >Current Running Basic Pay (2022 Scale) *</label
+          >
+          <input
+            class="form-control"
+            id="basic-pay"
+            placeholder="Auto-filled based on stage"
+            required=""
+            type="number"
+          />
+        </div>
+
+        <div class="btn-container">
+          <button class="btn-calc btn-primary" type="submit">
+            Calculate Complete Salary
+          </button>
+          <button
+            class="btn-calc btn-secondary"
+            onclick="resetForm()"
+            type="button"
+          >
+            Reset
+          </button>
+        </div>
+      </form>
+
+      <div class="results" id="results-section">
+        <div style="margin-bottom: 12px; text-align: center">
+          <h3 id="res-emp-title" style="color: var(--primary); font-size: 18px">
+            Salary Breakdown
+          </h3>
+          <span
+            id="res-bps-detail"
+            style="color: var(--text-muted); font-size: 12px"
+            >-</span
+          >
+        </div>
+
+        <div class="section-title">1. Pay &amp; Allowances (Monthly)</div>
+        <table class="result-table">
+          <tr>
+            <td>
+              <span class="result-label">Revised Basic Pay 2026</span
+              ><span class="result-subtext">Merged Adhoc 2022 &amp; 2025</span>
+            </td>
+            <td class="result-value" id="res-revised-bp">-</td>
+          </tr>
+          <tr>
+            <td>
+              <span class="result-label">House Rent Allowance</span
+              ><span class="result-subtext">Frozen Standard Rate</span>
+            </td>
+            <td class="result-value" id="res-house-rent">-</td>
+          </tr>
+          <tr>
+            <td>
+              <span class="result-label">Conveyance Allowance</span
+              ><span class="result-subtext">50% Increased Rate</span>
+            </td>
+            <td class="result-value" id="res-conveyance">-</td>
+          </tr>
+          <tr>
+            <td>
+              <span class="result-label">Medical Allowance</span
+              ><span class="result-subtext">Standard Fixed Rate</span>
+            </td>
+            <td class="result-value" id="res-medical">-</td>
+          </tr>
+          <tr id="row-diff-old">
+            <td>
+              <span class="result-label">Differential Allowance (Old)</span
+              ><span class="result-subtext">Frozen Rate</span>
+            </td>
+            <td class="result-value" id="res-diff-old">-</td>
+          </tr>
+          <tr>
+            <td>
+              <span class="result-label">Adhoc Relief 2023</span
+              ><span class="result-subtext">Frozen (35% / 30%)</span>
+            </td>
+            <td class="result-value" id="res-adhoc-2023">-</td>
+          </tr>
+          <tr>
+            <td>
+              <span class="result-label">Adhoc Relief 2024</span
+              ><span class="result-subtext">25% of Revised Basic</span>
+            </td>
+            <td class="result-value" id="res-adhoc-2024">-</td>
+          </tr>
+          <tr>
+            <td>
+              <span class="result-label">Adhoc Relief 2026</span
+              ><span class="result-subtext">7% of Revised Basic 2026</span>
+            </td>
+            <td class="result-value" id="res-adhoc-2026">-</td>
+          </tr>
+          <tr id="row-diff-2026">
+            <td>
+              <span class="result-label">Differential Allowance 2026</span
+              ><span class="result-subtext">2% of 2022 Basic</span>
+            </td>
+            <td class="result-value" id="res-diff-2026">-</td>
+          </tr>
+        </table>
+
+        <div class="summary-card card-blue">
+          <span>Gross Monthly Salary:</span>
+          <span id="res-gross-salary">Rs. 0</span>
+        </div>
+
+        <div class="section-title">2. Monthly Deductions</div>
+        <table class="result-table">
+          <tr>
+            <td><span class="result-label">GP Fund Subscription</span></td>
+            <td class="result-value" id="res-gpf">-</td>
+          </tr>
+          <tr>
+            <td><span class="result-label">Benevolent Fund (BF)</span></td>
+            <td class="result-value" id="res-bf">-</td>
+          </tr>
+          <tr>
+            <td><span class="result-label">Group Insurance (GI)</span></td>
+            <td class="result-value" id="res-gi">-</td>
+          </tr>
+          <tr>
+            <td><span class="result-label">Income Tax (Estimated)</span></td>
+            <td class="result-value" id="res-tax">-</td>
+          </tr>
+        </table>
+
+        <div class="summary-card card-red">
+          <span>Total Monthly Deductions:</span>
+          <span id="res-total-deductions">Rs. 0</span>
+        </div>
+
+        <div class="summary-card card-dark-green" style="margin-top: 14px">
+          <span>Estimated Net Salary (Take-Home):</span>
+          <span id="res-net-salary">Rs. 0</span>
+        </div>
+
+        <div class="summary-card card-vibrant-green">
+          <span style="font-weight: 600"
+            >Net Increase in Monthly Salary 2026:</span
+          >
+          <span id="res-net-increase" style="font-size: 20px; font-weight: 800"
+            >+ Rs. 0</span
+          >
+        </div>
+
+        <div
+          style="
+            color: var(--text-muted);
+            font-size: 11px;
+            margin-top: 12px;
+            text-align: center;
+          "
+        >
+          *Note: Calculations strictly align with Sindh Finance Department
+          Notification 2026-27 guidelines.
+        </div>
+      </div>
+
+      <div class="info-section">
+        <h3>How to Use the Sindh Government Salary Calculator?</h3>
+        <p>
+          Calculating your exact monthly salary is now easier than ever for
+          educators across Sindh. Follow these simple steps to get your payslip
+          details:
+        </p>
+        <ul>
+          <li>
+            <strong>Step 1:</strong> Select your current Basic Pay Scale (BPS-01
+            to BPS-22) from the dropdown menu[cite: 3].
+          </li>
+          <li>
+            <strong>Step 2:</strong> Choose your current pay stage or
+            increments[cite: 3].
+          </li>
+          <li>
+            <strong>Step 3:</strong> Enter your current running basic pay
+            according to the latest revised scales[cite: 3].
+          </li>
+          <li>
+            <strong>Step 4:</strong> Click the "Calculate Complete Salary"
+            button to view your gross pay, including medical, house rent, and
+            conveyance allowances, along with any standard deductions[cite: 3].
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  const payScales = {
+    1: {
+      min22: 13550,
+      inc22: 430,
+      stages: 30,
+      min26: 16280,
+      inc26: 520,
+      conv22: 1785,
+      conv26: 2678,
+      hra: 2033,
+      med: 1375,
+      diffOld: 1000,
+      gpf: 500,
+      bf: 150,
+      gi: 200,
+    },
+    2: {
+      min22: 13820,
+      inc22: 490,
+      stages: 30,
+      min26: 16600,
+      inc26: 590,
+      conv22: 1785,
+      conv26: 2678,
+      hra: 2073,
+      med: 1375,
+      diffOld: 1200,
+      gpf: 700,
+      bf: 150,
+      gi: 200,
+    },
+    3: {
+      min22: 14260,
+      inc22: 580,
+      stages: 30,
+      min26: 17130,
+      inc26: 700,
+      conv22: 1785,
+      conv26: 2678,
+      hra: 2139,
+      med: 1375,
+      diffOld: 1500,
+      gpf: 800,
+      bf: 150,
+      gi: 200,
+    },
+    4: {
+      min22: 14690,
+      inc22: 660,
+      stages: 30,
+      min26: 17650,
+      inc26: 800,
+      conv22: 1785,
+      conv26: 2678,
+      hra: 2204,
+      med: 1375,
+      diffOld: 1800,
+      gpf: 900,
+      bf: 150,
+      gi: 200,
+    },
+    5: {
+      min22: 15230,
+      inc22: 750,
+      stages: 30,
+      min26: 18300,
+      inc26: 910,
+      conv22: 1932,
+      conv26: 2898,
+      hra: 2285,
+      med: 1375,
+      diffOld: 2100,
+      gpf: 1100,
+      bf: 250,
+      gi: 300,
+    },
+    6: {
+      min22: 15760,
+      inc22: 840,
+      stages: 30,
+      min26: 18930,
+      inc26: 1010,
+      conv22: 1932,
+      conv26: 2898,
+      hra: 2364,
+      med: 1375,
+      diffOld: 2400,
+      gpf: 1200,
+      bf: 250,
+      gi: 300,
+    },
+    7: {
+      min22: 16310,
+      inc22: 910,
+      stages: 30,
+      min26: 19590,
+      inc26: 1100,
+      conv22: 1932,
+      conv26: 2898,
+      hra: 2447,
+      med: 1375,
+      diffOld: 2700,
+      gpf: 1300,
+      bf: 250,
+      gi: 300,
+    },
+    8: {
+      min22: 16890,
+      inc22: 1000,
+      stages: 30,
+      min26: 20290,
+      inc26: 1210,
+      conv22: 1932,
+      conv26: 2898,
+      hra: 2534,
+      med: 1375,
+      diffOld: 3000,
+      gpf: 1400,
+      bf: 250,
+      gi: 300,
+    },
+    9: {
+      min22: 17470,
+      inc22: 1090,
+      stages: 30,
+      min26: 20990,
+      inc26: 1310,
+      conv22: 1932,
+      conv26: 2898,
+      hra: 2621,
+      med: 1375,
+      diffOld: 3300,
+      gpf: 1500,
+      bf: 250,
+      gi: 300,
+    },
+    10: {
+      min22: 18050,
+      inc22: 1190,
+      stages: 30,
+      min26: 21680,
+      inc26: 1430,
+      conv22: 1932,
+      conv26: 2898,
+      hra: 2708,
+      med: 1375,
+      diffOld: 3600,
+      gpf: 1700,
+      bf: 250,
+      gi: 300,
+    },
+    11: {
+      min22: 18650,
+      inc22: 1310,
+      stages: 30,
+      min26: 22410,
+      inc26: 1580,
+      conv22: 2856,
+      conv26: 4284,
+      hra: 2798,
+      med: 1375,
+      diffOld: 4000,
+      gpf: 2000,
+      bf: 416,
+      gi: 464,
+    },
+    12: {
+      min22: 19770,
+      inc22: 1430,
+      stages: 30,
+      min26: 23750,
+      inc26: 1720,
+      conv22: 2856,
+      conv26: 4284,
+      hra: 2966,
+      med: 1375,
+      diffOld: 4400,
+      gpf: 2300,
+      bf: 416,
+      gi: 464,
+    },
+    13: {
+      min22: 21160,
+      inc22: 1560,
+      stages: 30,
+      min26: 25420,
+      inc26: 1880,
+      conv22: 2856,
+      conv26: 4284,
+      hra: 3174,
+      med: 1375,
+      diffOld: 4800,
+      gpf: 2700,
+      bf: 416,
+      gi: 464,
+    },
+    14: {
+      min22: 22530,
+      inc22: 1740,
+      stages: 30,
+      min26: 27060,
+      inc26: 2090,
+      conv22: 2856,
+      conv26: 4284,
+      hra: 3321,
+      med: 1375,
+      diffOld: 5237,
+      gpf: 3900,
+      bf: 416,
+      gi: 464,
+    },
+    15: {
+      min22: 23920,
+      inc22: 1980,
+      stages: 30,
+      min26: 28730,
+      inc26: 2380,
+      conv22: 2856,
+      conv26: 4284,
+      hra: 3588,
+      med: 1375,
+      diffOld: 5600,
+      gpf: 4200,
+      bf: 416,
+      gi: 464,
+    },
+    16: {
+      min22: 28070,
+      inc22: 2260,
+      stages: 30,
+      min26: 33720,
+      inc26: 2720,
+      conv22: 5000,
+      conv26: 7500,
+      hra: 4211,
+      med: 1500,
+      diffOld: 0,
+      gpf: 5000,
+      bf: 750,
+      gi: 900,
+    },
+    17: {
+      min22: 45070,
+      inc22: 3420,
+      stages: 20,
+      min26: 54140,
+      inc26: 4110,
+      conv22: 5000,
+      conv26: 7500,
+      hra: 6761,
+      med: 1500,
+      diffOld: 0,
+      gpf: 6500,
+      bf: 750,
+      gi: 900,
+    },
+    18: {
+      min22: 56880,
+      inc22: 4260,
+      stages: 20,
+      min26: 68330,
+      inc26: 5120,
+      conv22: 5000,
+      conv26: 7500,
+      hra: 8532,
+      med: 1500,
+      diffOld: 0,
+      gpf: 8000,
+      bf: 750,
+      gi: 900,
+    },
+    19: {
+      min22: 87840,
+      inc22: 4530,
+      stages: 20,
+      min26: 105510,
+      inc26: 5450,
+      conv22: 5000,
+      conv26: 7500,
+      hra: 13176,
+      med: 1500,
+      diffOld: 0,
+      gpf: 10500,
+      bf: 750,
+      gi: 900,
+    },
+    20: {
+      min22: 102470,
+      inc22: 6690,
+      stages: 14,
+      min26: 123090,
+      inc26: 8040,
+      conv22: 5000,
+      conv26: 7500,
+      hra: 15371,
+      med: 1500,
+      diffOld: 0,
+      gpf: 13000,
+      bf: 750,
+      gi: 900,
+    },
+    21: {
+      min22: 113790,
+      inc22: 7420,
+      stages: 14,
+      min26: 136680,
+      inc26: 8920,
+      conv22: 5000,
+      conv26: 7500,
+      hra: 17069,
+      med: 1500,
+      diffOld: 0,
+      gpf: 15000,
+      bf: 750,
+      gi: 900,
+    },
+    22: {
+      min22: 122190,
+      inc22: 8710,
+      stages: 14,
+      min26: 146770,
+      inc26: 10470,
+      conv22: 5000,
+      conv26: 7500,
+      hra: 18329,
+      med: 1500,
+      diffOld: 0,
+      gpf: 17000,
+      bf: 750,
+      gi: 900,
+    },
+  };
+
+  const bpsSelect = document.getElementById("bps");
+  const stageSelect = document.getElementById("stage");
+  const basicPayInput = document.getElementById("basic-pay");
+
+  for (let i = 1; i <= 22; i++) {
+    let option = document.createElement("option");
+    option.value = i;
+    option.text = `BPS - ${i.toString().padStart(2, "0")}`;
+    bpsSelect.appendChild(option);
+  }
+
+  bpsSelect.addEventListener("change", function () {
+    const bps = parseInt(this.value);
+    const scale = payScales[bps];
+
+    stageSelect.innerHTML =
+      '<option value="" disabled selected>Select Stage</option>';
+    for (let st = 0; st <= scale.stages; st++) {
+      let pay = scale.min22 + st * scale.inc22;
+      let option = document.createElement("option");
+      option.value = st;
+      option.text =
+        st === 0
+          ? `Stage 0 (Initial) - Rs. ${pay.toLocaleString()}`
+          : `Stage ${st} - Rs. ${pay.toLocaleString()}`;
+      stageSelect.appendChild(option);
+    }
+    stageSelect.disabled = false;
+    basicPayInput.value = "";
+  });
+
+  stageSelect.addEventListener("change", function () {
+    const bps = parseInt(bpsSelect.value);
+    const stage = parseInt(this.value);
+    if (bps && !isNaN(stage)) {
+      const scale = payScales[bps];
+      basicPayInput.value = scale.min22 + stage * scale.inc22;
+    }
+  });
+
+  const formatCurrency = (amount) =>
+    "Rs. " + Math.round(amount).toLocaleString("en-PK");
+  const showError = (msg) => {
+    const errorDiv = document.getElementById("error-msg");
+    errorDiv.textContent = msg;
+    errorDiv.style.display = "block";
+    document.getElementById("results-section").style.display = "none";
+  };
+  const hideError = () =>
+    (document.getElementById("error-msg").style.display = "none");
+
+  const resetForm = () => {
+    document.getElementById("calculator-form").reset();
+    stageSelect.innerHTML =
+      '<option value="" disabled selected>First select BPS above</option>';
+    stageSelect.disabled = true;
+    document.getElementById("results-section").style.display = "none";
+    hideError();
+  };
+
+  document
+    .getElementById("calculator-form")
+    .addEventListener("submit", function (e) {
+      e.preventDefault();
+      hideError();
+
+      const name = document.getElementById("emp-name").value || "Employee";
+      const bps = parseInt(document.getElementById("bps").value);
+      const currentBasic = parseFloat(
+        document.getElementById("basic-pay").value,
+      );
+
+      if (!bps || isNaN(currentBasic))
+        return showError(
+          "Please select BPS and enter/select Current Basic Pay.",
+        );
+
+      const scale = payScales[bps];
+
+      if (currentBasic < scale.min22)
+        return showError(
+          `Current basic pay cannot be less than initial stage (Rs. ${scale.min22}) for BPS-${bps}.`,
+        );
+
+      let stage = (currentBasic - scale.min22) / scale.inc22;
+      if (Math.abs(stage - Math.round(stage)) < 0.01) stage = Math.round(stage);
+
+      if (!Number.isInteger(stage) || stage < 0 || stage > scale.stages)
+        return showError(
+          `Invalid Basic Pay (Rs. ${currentBasic}) for BPS-${bps}. Please check stage selection.`,
+        );
+
+      const revisedBasic = scale.min26 + stage * scale.inc26;
+      const houseRent = scale.hra;
+      const conveyance = scale.conv26;
+      const medical = scale.med;
+      const diffOld = scale.diffOld;
+      const adhoc2023 = currentBasic * (bps <= 16 ? 0.35 : 0.3);
+      const adhoc2024 = revisedBasic * 0.25;
+      const adhoc2026 = revisedBasic * 0.07;
+      const diff2026 = bps <= 16 ? currentBasic * 0.02 : 0;
+      const grossSalary =
+        revisedBasic +
+        houseRent +
+        conveyance +
+        medical +
+        diffOld +
+        adhoc2023 +
+        adhoc2024 +
+        adhoc2026 +
+        diff2026;
+
+      const gpf = scale.gpf;
+      const bf = scale.bf;
+      const gi = scale.gi;
+      let tax = 0;
+      if (grossSalary > 50000) tax = Math.round((grossSalary - 50000) * 0.01);
+      if (bps === 14)
+        tax = stage === 3 ? 122 : stage === 0 ? 90 : 110 + stage * 5;
+      const totalDeductions = gpf + bf + gi + tax;
+
+      const netSalary = grossSalary - totalDeductions;
+      const convIncrease = scale.conv26 - scale.conv22;
+      const netIncrease = adhoc2026 + diff2026 + convIncrease;
+
+      document.getElementById("res-emp-title").textContent =
+        `${name}'s Salary Statement`;
+      document.getElementById("res-bps-detail").textContent =
+        `BPS-${bps.toString().padStart(2, "0")} | Stage ${stage} | Running Basic: ${formatCurrency(currentBasic)}`;
+      document.getElementById("res-revised-bp").textContent =
+        formatCurrency(revisedBasic);
+      document.getElementById("res-house-rent").textContent =
+        formatCurrency(houseRent);
+      document.getElementById("res-conveyance").textContent =
+        formatCurrency(conveyance);
+      document.getElementById("res-medical").textContent =
+        formatCurrency(medical);
+
+      if (diffOld > 0) {
+        document.getElementById("row-diff-old").style.display = "table-row";
+        document.getElementById("res-diff-old").textContent =
+          formatCurrency(diffOld);
+      } else {
+        document.getElementById("row-diff-old").style.display = "none";
+      }
+
+      document.getElementById("res-adhoc-2023").textContent =
+        formatCurrency(adhoc2023);
+      document.getElementById("res-adhoc-2024").textContent =
+        formatCurrency(adhoc2024);
+      document.getElementById("res-adhoc-2026").textContent =
+        formatCurrency(adhoc2026);
+
+      if (bps <= 16) {
+        document.getElementById("row-diff-2026").style.display = "table-row";
+        document.getElementById("res-diff-2026").textContent =
+          formatCurrency(diff2026);
+      } else {
+        document.getElementById("row-diff-2026").style.display = "none";
+      }
+
+      document.getElementById("res-gross-salary").textContent =
+        formatCurrency(grossSalary);
+      document.getElementById("res-gpf").textContent = formatCurrency(gpf);
+      document.getElementById("res-bf").textContent = formatCurrency(bf);
+      document.getElementById("res-gi").textContent = formatCurrency(gi);
+      document.getElementById("res-tax").textContent = formatCurrency(tax);
+      document.getElementById("res-total-deductions").textContent =
+        formatCurrency(totalDeductions);
+      document.getElementById("res-net-salary").textContent =
+        formatCurrency(netSalary);
+      document.getElementById("res-net-increase").textContent =
+        "+ " + formatCurrency(netIncrease);
+
+      document.getElementById("results-section").style.display = "block";
+    });
+</script>
+
+<%- include('partials/footer') %>

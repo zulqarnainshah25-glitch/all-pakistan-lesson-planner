@@ -1,0 +1,116 @@
+<!-- Footer -->
+ <style>
+    /* 1. Footer Ka Background Color */
+    #footer-bar {
+        background: #191a2b !important; /* Yahan footer ka background color dalein */
+        border-top: 1px solid #1f2937 !important; /* Upar wali line ka color */
+    }
+
+    /* 2. Footer Ka Aam Text (Jese Copyright waghaira) */
+    #footer-bar p {
+        color: #9ca3af !important; /* Aam text ka rang */
+    }
+
+    /* 3. Footer ke Links (Privacy Policy, Disclaimer, etc.) */
+    #footer-bar a {
+        color: #d1d5db !important; /* Links ka rang */
+    }
+
+    /* 4. Footer Links par jab mouse aaye (Hover Effect) */
+    #footer-bar a:hover {
+        color: #4ade80 !important; /* Mouse upar aane par links ka rang (jaise green/teal) */
+    }
+</style>
+    <footer id="footer-bar" class="bg-gray-800 border-t border-gray-700 py-8 px-6 mt-auto transition-colors duration-300">
+        <div class="container mx-auto flex flex-col md:flex-row justify-between items-center text-sm text-gray-400">
+            <p>&copy; 2026 Allforu. All Rights Reserved. Designed for Sindh Teachers.</p>
+            <div class="flex flex-wrap gap-6 mt-4 md:mt-0 font-medium">
+                <a href="/privacy-policy" class="hover:text-teal-500 transition">Privacy Policy</a>
+                <a href="/disclaimer" class="hover:text-teal-500 transition">Disclaimer</a>
+                <a href="/terms" class="hover:text-teal-500 transition">Terms & Conditions</a>
+                <a href="/contact" class="hover:text-teal-500 transition">Contact Us</a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scripts (Search & Dark Mode) -->
+    <script>
+        function filterTools() {
+            let query = document.getElementById('search-box').value.toLowerCase();
+            let cards = document.querySelectorAll('.tool-card');
+            cards.forEach(card => {
+                let text = card.innerText.toLowerCase();
+                card.style.display = text.includes(query) ? "block" : "none";
+            });
+        }
+
+        function toggleDarkMode() {
+            let body = document.body;
+            let nav = document.getElementById('nav-bar');
+            let navLogo = document.getElementById('nav-logo');
+            let navItems = document.querySelectorAll('.nav-item');
+            let footer = document.getElementById('footer-bar');
+            let ticker = document.getElementById('ticker-bar');
+            let title = document.getElementById('tools-title');
+            let btn = document.getElementById('theme-toggle-btn');
+            let search = document.getElementById('search-box');
+            let cards = document.querySelectorAll('.tool-card');
+
+            if (body.classList.contains('bg-gray-900')) {
+                // Switch to Light Mode
+                body.classList.remove('bg-gray-900', 'text-gray-100');
+                body.classList.add('bg-white', 'text-gray-900');
+
+                nav.classList.remove('from-blue-950', 'via-indigo-900', 'to-blue-900', 'border-blue-800/40');
+                nav.classList.add('bg-white', 'border-gray-200', 'shadow-sm');
+                if(navLogo) { navLogo.classList.remove('text-cyan-400'); navLogo.classList.add('text-blue-900'); }
+
+                navItems.forEach(item => {
+                    item.classList.remove('text-gray-200', 'text-cyan-400', 'hover:text-cyan-300');
+                    item.classList.add('text-gray-700', 'hover:text-blue-600');
+                });
+
+                if(footer) { footer.classList.remove('bg-gray-800', 'text-gray-400', 'border-gray-700'); footer.classList.add('bg-gray-100', 'text-gray-700', 'border-gray-200'); }
+                if(ticker) { ticker.classList.remove('bg-teal-900/40', 'border-teal-700/30'); ticker.classList.add('bg-teal-50', 'border-teal-200'); }
+                if(title) { title.classList.remove('text-white'); title.classList.add('text-gray-900'); }
+                if(search) { search.classList.remove('bg-blue-950/80', 'text-gray-200', 'border-blue-800/50'); search.classList.add('bg-gray-100', 'text-gray-900', 'border-gray-300'); }
+
+                cards.forEach(card => {
+                    card.classList.remove('bg-gray-800', 'border-gray-700', 'text-gray-100');
+                    card.classList.add('bg-gray-50', 'border-gray-200', 'text-gray-900');
+                });
+
+                btn.innerHTML = '☀️';
+                btn.className = "bg-gray-200 hover:bg-gray-300 text-gray-800 border border-gray-300 p-2 rounded-lg text-sm transition shadow";
+            } else {
+                // Switch to Dark Mode
+                body.classList.remove('bg-white', 'text-gray-900');
+                body.classList.add('bg-gray-900', 'text-gray-100');
+
+                nav.classList.remove('bg-white', 'border-gray-200', 'shadow-sm');
+                nav.classList.add('bg-gradient-to-r', 'from-blue-950', 'via-indigo-900', 'to-blue-900', 'border-blue-800/40');
+                if(navLogo) { navLogo.classList.remove('text-blue-900'); navLogo.classList.add('text-cyan-400'); }
+
+                navItems.forEach((item, index) => {
+                    item.classList.remove('text-gray-700', 'hover:text-blue-600');
+                    if(index === 0) { item.classList.add('text-cyan-400', 'hover:text-cyan-300'); } 
+                    else { item.classList.add('text-gray-200', 'hover:text-cyan-400'); }
+                });
+
+                if(footer) { footer.classList.remove('bg-gray-100', 'text-gray-700', 'border-gray-200'); footer.classList.add('bg-gray-800', 'text-gray-400', 'border-gray-700'); }
+                if(ticker) { ticker.classList.remove('bg-teal-50', 'border-teal-200'); ticker.classList.add('bg-teal-900/40', 'border-teal-700/30'); }
+                if(title) { title.classList.remove('text-gray-900'); title.classList.add('text-white'); }
+                if(search) { search.classList.remove('bg-gray-100', 'text-gray-900', 'border-gray-300'); search.classList.add('bg-blue-950/80', 'text-gray-200', 'border-blue-800/50'); }
+
+                cards.forEach(card => {
+                    card.classList.remove('bg-gray-50', 'border-gray-200', 'text-gray-900');
+                    card.classList.add('bg-gray-800', 'border-gray-700', 'text-gray-100');
+                });
+
+                btn.innerHTML = '🌙';
+                btn.className = "bg-blue-900 hover:bg-blue-800 text-cyan-400 border border-blue-700/50 p-2 rounded-lg text-sm transition shadow";
+            }
+        }
+    </script>
+</body>
+</html>

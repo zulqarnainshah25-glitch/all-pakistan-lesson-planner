@@ -1,0 +1,97 @@
+<%- include('partials/header') %>
+
+<!-- Latest Updates Ticker -->
+<div
+  id="ticker-bar"
+  class="bg-teal-900/40 border-b border-teal-700/30 py-2 px-4 transition-colors duration-300"
+>
+  <div class="container mx-auto flex items-center text-xs text-teal-300 gap-3">
+    <span
+      class="bg-teal-500 text-gray-900 font-bold px-2 py-0.5 rounded uppercase text-[10px]"
+      >LATEST UPDATES</span
+    >
+    <p class="truncate">
+      Sindh Government Teachers Leave Rules Explained & Primary Lesson Planner
+      Live Now!
+    </p>
+  </div>
+</div>
+
+<!-- Hero Header Section -->
+<header
+  class="bg-gradient-to-r from-teal-900 via-teal-800 to-gray-900 py-16 px-4 text-center border-b border-gray-800 text-white shadow-md"
+>
+  <div class="container mx-auto max-w-4xl">
+    <span
+      class="bg-teal-950 text-teal-300 text-xs font-semibold px-3 py-1 rounded-full uppercase tracking-wider mb-4 inline-block border border-teal-700"
+      >Official Sindh Education Utility</span
+    >
+    <h1
+      class="text-4xl md:text-6xl font-extrabold mb-4 tracking-tight text-white"
+    >
+      Empowering Sindh Teachers
+    </h1>
+    <p class="text-teal-100 text-base md:text-lg max-w-2xl mx-auto font-light">
+      Access official primary lesson plans, accurate salary calculators, and
+      essential educational resources tailored for Sindh Government Teachers.
+    </p>
+  </div>
+</header>
+
+<!-- Featured Tools Grid -->
+<main class="container mx-auto px-6 py-12 flex-grow max-w-6xl">
+  <div class="flex items-center justify-between mb-8">
+    <h2
+      id="tools-title"
+      class="text-2xl font-bold border-l-4 border-teal-500 pl-3 transition-colors"
+    >
+      Featured Tools
+    </h2>
+    <span class="text-xs text-gray-400">Interactive Dashboard</span>
+  </div>
+
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-6" id="tools-grid">
+    <!-- Tool 1 -->
+    <div
+      class="tool-card bg-gray-800 p-6 rounded-2xl border border-gray-700 hover:border-teal-500 transition-all duration-300 shadow-xl group"
+    >
+      <div
+        class="w-12 h-12 bg-teal-900 text-teal-400 rounded-xl flex items-center justify-center text-2xl mb-4 group-hover:scale-110 transition"
+      >
+        📖
+      </div>
+      <h3 class="text-xl font-bold mb-2 group-hover:text-teal-500 transition">
+        Lesson Plan Generator
+      </h3>
+      <p class="text-gray-400 text-sm leading-relaxed mb-4">
+        Generate structured primary education lesson plans based on official
+        Sindh textbook board curriculum.
+      </p>
+      <a
+        href="/lesson-planner"
+        class="inline-block text-xs font-bold text-teal-400 hover:underline"
+        >Launch Tool →</a
+      >
+    </div>
+
+    <!-- Tool 2 -->
+    <div
+      class="tool-card bg-gray-800 p-6 rounded-2xl border border-gray-700 hover:border-teal-500 transition-all duration-300 shadow-xl group cursor-pointer"
+    >
+      <div
+        class="w-12 h-12 bg-teal-900 text-teal-400 rounded-xl flex items-center justify-center text-2xl mb-4 group-hover:scale-110 transition"
+      >
+        💲
+      </div>
+      <h3 class="text-xl font-bold mb-2 group-hover:text-teal-500 transition">
+        Salary Calculator 2026
+      </h3>
+      <p class="text-gray-400 text-sm leading-relaxed mb-4">
+        Calculate your exact monthly salary, allowances, and deductions easily.
+      </p>
+      <span class="text-xs font-bold text-teal-400">Coming Soon →</span>
+    </div>
+  </div>
+</main>
+
+<%- include('partials/footer') %>
